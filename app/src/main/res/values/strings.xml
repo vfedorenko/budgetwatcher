@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">BudgetWatcher</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+
+    <string-array name="drawer_options">
+        <item>Home</item>
+        <item>Statistic</item>
+        <item>Settings</item>
+    </string-array>
+</resources>

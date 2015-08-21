@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="key_parsing_enabled">parsing_enabled</string>
+
+    <string name="key_phone">key_phone</string>
+    <string name="key_card_prefix">key_card_prefix</string>
+    <string name="key_incoming_prefix">key_incoming_prefix</string>
+    <string name="key_outgoing_prefix">key_outgoing_prefix</string>
+    <string name="key_balance_prefix">key_balance_prefix</string>
+</resources>

@@ -1,0 +1,26 @@
+<resources>
+    <string name="title_activity_settings">Settings</string>
+
+    <!-- Strings related to Settings -->
+
+    <!-- Example General settings -->
+    <string name="pref_header_sms_parsing">SMS parsing</string>
+
+    <string name="pref_title_enable_parsing">Enable SMS parsing</string>
+    <string name="pref_description_enable_parsing">Recommended for auto filling statistics</string>
+
+    <string name="pref_title_phone_number">Phone number for parsing</string>
+    <string name="pref_default_phone_number">1209</string>
+
+    <string name="pref_title_card_number_prefix">Prefix before card number</string>
+    <string name="pref_default_card_number_prefix">#</string>
+
+    <string name="pref_title_incoming_money_prefix">Prefixes for incoming money (use , as separator)</string>
+    <string name="pref_default_incoming_money_prefix">ZACHISLENIE</string>
+
+    <string name="pref_title_outgoing_money_prefix">Prefixes for outgoing money (use , as separator)</string>
+    <string name="pref_default_outgoing_money_prefix">OPLATA,NALICHNYE</string>
+
+    <string name="pref_title_balance_prefix">Prefixes for current balance (use , as separator)</string>
+    <string name="pref_default_balance_prefix">OSTATOK</string>
+</resources>
