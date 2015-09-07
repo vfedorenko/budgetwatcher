@@ -11,39 +11,34 @@
         android:title="@string/pref_title_phone_number"
         android:defaultValue="@string/pref_default_phone_number"
         android:selectAllOnFocus="true"
-        android:inputType="phone"
-        android:dependency="@string/key_parsing_enabled"/>
+        android:inputType="phone"/>
 
     <EditTextPreference
         android:key="@string/key_card_prefix"
         android:title="@string/pref_title_card_number_prefix"
         android:defaultValue="@string/pref_default_card_number_prefix"
         android:selectAllOnFocus="true"
-        android:inputType="phone"
-        android:dependency="@string/key_parsing_enabled"/>
+        android:inputType="phone"/>
 
     <EditTextPreference
         android:key="@string/key_incoming_prefix"
         android:title="@string/pref_title_incoming_money_prefix"
         android:defaultValue="@string/pref_default_incoming_money_prefix"
         android:selectAllOnFocus="true"
-        android:inputType="phone"
-        android:dependency="@string/key_parsing_enabled"/>
+        android:inputType="phone"/>
 
     <EditTextPreference
         android:key="@string/key_outgoing_prefix"
         android:title="@string/pref_title_outgoing_money_prefix"
         android:defaultValue="@string/pref_default_outgoing_money_prefix"
         android:selectAllOnFocus="true"
-        android:inputType="phone"
-        android:dependency="@string/key_parsing_enabled"/>
+        android:inputType="phone"/>
 
     <EditTextPreference
         android:key="@string/key_balance_prefix"
         android:title="@string/pref_title_balance_prefix"
         android:defaultValue="@string/pref_default_balance_prefix"
         android:selectAllOnFocus="true"
-        android:inputType="phone"
-        android:dependency="@string/key_parsing_enabled"/>
+        android:inputType="phone"/>
 
 </PreferenceScreen>

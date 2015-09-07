@@ -1,0 +1,6 @@
+<resources>
+    <string name="title_home">Home</string>
+
+    <!-- Strings related to MainFragment -->
+    <string name="your_current_amount">Your current amount</string>
+</resources>

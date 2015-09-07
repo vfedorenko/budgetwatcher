@@ -1,5 +1,6 @@
 package by.vfedorenko.budgetwatcher.activities;
 
+import android.app.FragmentManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
@@ -11,6 +12,8 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import by.vfedorenko.budgetwatcher.R;
+import by.vfedorenko.budgetwatcher.fragments.MainFragment;
+import by.vfedorenko.budgetwatcher.utils.SmsSyncronizer;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -31,6 +34,11 @@ public class MainActivity extends AppCompatActivity {
 				selectItem(position);
 			}
 		});
+
+		FragmentManager fragmentManager = getFragmentManager();
+		fragmentManager.beginTransaction()
+				.replace(R.id.content_frame, new MainFragment())
+				.commit();
 	}
 
 	@Override
@@ -48,7 +56,10 @@ public class MainActivity extends AppCompatActivity {
 		int id = item.getItemId();
 
 		//noinspection SimplifiableIfStatement
-		if (id == R.id.action_settings) {
+		if (id == R.id.action_sync_sms) {
+			SmsSyncronizer.syncSms(this.getApplicationContext());
+			return true;
+		} else if (id == R.id.action_sync_network) {
 			return true;
 		}
 
@@ -59,6 +70,11 @@ public class MainActivity extends AppCompatActivity {
 	private void selectItem(int position) {
 		switch (position) {
 			case 0:
+				// Insert the fragment by replacing any existing fragment
+				FragmentManager fragmentManager = getFragmentManager();
+				fragmentManager.beginTransaction()
+						.replace(R.id.content_frame, new MainFragment())
+						.commit();
 				break;
 			case 1:
 				break;
