@@ -24,7 +24,7 @@ public class SmsSyncronizer {
 				String selection = Telephony.Sms.Inbox.ADDRESS + " = ?";
 				String[] selectionArgs = {SettingsManager.getPhoneNumber(context)};
 
-				Cursor cursor = context.getContentResolver().query(uri, projection, selection, selectionArgs, null);
+				Cursor cursor = context.getContentResolver().query(uri, projection, selection, selectionArgs, Telephony.Sms.Inbox.DATE);
 
 				if (cursor.moveToFirst()) {
 					do {
@@ -41,29 +41,41 @@ public class SmsSyncronizer {
 	}
 
 	public static void parseSmsToDatabase(Context context, String body, long date) {
+		boolean hasBalance = false;
+
 		String balance = parseValue(body, SettingsManager.getBalancePrefix(context).split(SEPARATOR));
+		if (balance != null) {
+			hasBalance = true;
+			BalanceUtils.saveCurrentBalance(context, Long.valueOf(balance.trim()));
+		}
 
 		String incoming = parseValue(body, SettingsManager.getIncomingPrefixes(context).split(SEPARATOR));
 		if (incoming != null) {
 			ContentValues cv = new ContentValues();
-			cv.put(DatabaseManager.OperationsTable.BALANCE, balance);
 			cv.put(DatabaseManager.OperationsTable.AMOUNT, incoming);
 			cv.put(DatabaseManager.OperationsTable.TYPE, DatabaseManager.OperationsTable.TYPE_INCOMING);
 			cv.put(DatabaseManager.OperationsTable.DATE, date);
 
 			context.getContentResolver().insert(BudgetProvider.CONTENT_URI_OPERATIONS, cv);
+
+			if (!hasBalance) {
+				BalanceUtils.changeCurrentBalance(context, Long.valueOf(incoming), BalanceUtils.OperationType.INCREASE);
+			}
 			return;
 		}
 
 		String outgoing = parseValue(body, SettingsManager.getOutgoingPrefixes(context).split(SEPARATOR));
 		if (outgoing != null) {
 			ContentValues cv = new ContentValues();
-			cv.put(DatabaseManager.OperationsTable.BALANCE, balance);
 			cv.put(DatabaseManager.OperationsTable.AMOUNT, outgoing);
 			cv.put(DatabaseManager.OperationsTable.TYPE, DatabaseManager.OperationsTable.TYPE_OUTGOING);
 			cv.put(DatabaseManager.OperationsTable.DATE, date);
 
 			context.getContentResolver().insert(BudgetProvider.CONTENT_URI_OPERATIONS, cv);
+
+			if (!hasBalance) {
+				BalanceUtils.changeCurrentBalance(context, Long.valueOf(outgoing), BalanceUtils.OperationType.DECREASE);
+			}
 		}
 	}
 

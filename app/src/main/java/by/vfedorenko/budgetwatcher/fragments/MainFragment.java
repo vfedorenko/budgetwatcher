@@ -12,11 +12,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CursorAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import by.vfedorenko.budgetwatcher.R;
 import by.vfedorenko.budgetwatcher.adapters.OperationsAdapter;
 import by.vfedorenko.budgetwatcher.content.BudgetProvider;
 import by.vfedorenko.budgetwatcher.content.DatabaseManager;
+import by.vfedorenko.budgetwatcher.utils.BalanceUtils;
 
 public class MainFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
 	private static final int OPERATIONS_LOADER_ID = 1;
@@ -30,6 +32,11 @@ public class MainFragment extends Fragment implements LoaderManager.LoaderCallba
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View v = inflater.inflate(R.layout.fragment_main, container, false);
+
+		long balance = BalanceUtils.getCurrentBalance(getActivity());
+
+		TextView amount = (TextView) v.findViewById(R.id.amount_text_view);
+		amount.setText(String.valueOf(balance));
 
 		ListView operationsListView = (ListView) v.findViewById(R.id.operations_list_view);
 

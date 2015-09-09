@@ -6,7 +6,6 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.provider.BaseColumns;
 
 public class DatabaseManager extends SQLiteOpenHelper {
-	private SQLiteDatabase db;
 
 	public static class OperationsTable implements BaseColumns {
 		public static final int TYPE_INCOMING = 1;
@@ -17,7 +16,6 @@ public class DatabaseManager extends SQLiteOpenHelper {
 		public static final String TYPE = "type";
 		public static final String AMOUNT = "amount";
 		public static final String DATE = "date";
-		public static final String BALANCE = "balance";
 	}
 
 	private static final String DB_FILE_NAME = "budget.db";
@@ -29,14 +27,11 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
 	@Override
 	public void onCreate(SQLiteDatabase db) {
-		this.db = db;
-
 		db.execSQL("CREATE TABLE " + OperationsTable.TABLE_NAME + " ("
 				+ OperationsTable._ID + " INTEGER PRIMARY KEY,"
 				+ OperationsTable.TYPE + " INTEGER,"
 				+ OperationsTable.AMOUNT + " INTEGER,"
-				+ OperationsTable.DATE + " INTEGER,"
-				+ OperationsTable.BALANCE + " INTEGER"
+				+ OperationsTable.DATE + " INTEGER"
 				+ " );");
 	}
 
@@ -45,7 +40,6 @@ public class DatabaseManager extends SQLiteOpenHelper {
 		dropDataBase();
 		onCreate(db);
 	}
-
 
 	public void dropDataBase(){
 		String[] tables = {OperationsTable.TABLE_NAME};
