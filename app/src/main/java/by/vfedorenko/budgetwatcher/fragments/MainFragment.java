@@ -17,7 +17,7 @@ import android.widget.TextView;
 import by.vfedorenko.budgetwatcher.R;
 import by.vfedorenko.budgetwatcher.adapters.OperationsAdapter;
 import by.vfedorenko.budgetwatcher.content.BudgetProvider;
-import by.vfedorenko.budgetwatcher.content.DatabaseManager;
+import by.vfedorenko.budgetwatcher.content.OperationsTable;
 import by.vfedorenko.budgetwatcher.utils.BalanceUtils;
 
 public class MainFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
@@ -62,7 +62,7 @@ public class MainFragment extends Fragment implements LoaderManager.LoaderCallba
 	public Loader<Cursor> onCreateLoader(int id, Bundle args) {
 		if (id == OPERATIONS_LOADER_ID) {
 			return new CursorLoader(getActivity(), BudgetProvider.CONTENT_URI_OPERATIONS, null, null, null,
-					DatabaseManager.OperationsTable.DATE + " DESC");
+					OperationsTable.DATE + " DESC");
 		} else {
 			return null;
 		}

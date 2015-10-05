@@ -40,7 +40,7 @@ public class BudgetProvider extends ContentProvider {
 
 		switch (uriType) {
 			case ALL_OPERATIONS:
-				queryBuilder.setTables(DatabaseManager.OperationsTable.TABLE_NAME);
+				queryBuilder.setTables(OperationsTable.TABLE_NAME);
 				break;
 		}
 
@@ -58,7 +58,7 @@ public class BudgetProvider extends ContentProvider {
 		long rowID;
 		switch (uriType) {
 			case ALL_OPERATIONS:
-				rowID = databaseManager_.getWritableDatabase().insert(DatabaseManager.OperationsTable.TABLE_NAME, null, values);
+				rowID = databaseManager_.getWritableDatabase().insert(OperationsTable.TABLE_NAME, null, values);
 				resultUri = ContentUris.withAppendedId(CONTENT_URI_OPERATIONS, rowID);
 				break;
 		}
@@ -74,7 +74,7 @@ public class BudgetProvider extends ContentProvider {
 
 		switch (uriType) {
 			case ALL_OPERATIONS:
-				count = databaseManager_.getWritableDatabase().delete(DatabaseManager.OperationsTable.TABLE_NAME, selection, selectionArgs);
+				count = databaseManager_.getWritableDatabase().delete(OperationsTable.TABLE_NAME, selection, selectionArgs);
 				getContext().getContentResolver().notifyChange(uri, null);
 				break;
 		}

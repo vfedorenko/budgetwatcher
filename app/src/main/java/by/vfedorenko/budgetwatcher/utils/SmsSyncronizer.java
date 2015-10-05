@@ -1,13 +1,12 @@
 package by.vfedorenko.budgetwatcher.utils;
 
-import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.Telephony;
 
 import by.vfedorenko.budgetwatcher.content.BudgetProvider;
-import by.vfedorenko.budgetwatcher.content.DatabaseManager;
+import by.vfedorenko.budgetwatcher.content.OperationsTable;
 
 public class SmsSyncronizer {
 	private static final String SEPARATOR = ",";
@@ -51,12 +50,10 @@ public class SmsSyncronizer {
 
 		String incoming = parseValue(body, SettingsManager.getIncomingPrefixes(context).split(SEPARATOR));
 		if (incoming != null) {
-			ContentValues cv = new ContentValues();
-			cv.put(DatabaseManager.OperationsTable.AMOUNT, incoming);
-			cv.put(DatabaseManager.OperationsTable.TYPE, DatabaseManager.OperationsTable.TYPE_INCOMING);
-			cv.put(DatabaseManager.OperationsTable.DATE, date);
+			OperationsTable.Builder builder = OperationsTable.getBuilder();
+			builder.amount(Long.valueOf(incoming)).date(date).type(OperationsTable.TYPE_INCOMING);
 
-			context.getContentResolver().insert(BudgetProvider.CONTENT_URI_OPERATIONS, cv);
+			context.getContentResolver().insert(BudgetProvider.CONTENT_URI_OPERATIONS, builder.build());
 
 			if (!hasBalance) {
 				BalanceUtils.changeCurrentBalance(context, Long.valueOf(incoming), BalanceUtils.OperationType.INCREASE);
@@ -66,12 +63,10 @@ public class SmsSyncronizer {
 
 		String outgoing = parseValue(body, SettingsManager.getOutgoingPrefixes(context).split(SEPARATOR));
 		if (outgoing != null) {
-			ContentValues cv = new ContentValues();
-			cv.put(DatabaseManager.OperationsTable.AMOUNT, outgoing);
-			cv.put(DatabaseManager.OperationsTable.TYPE, DatabaseManager.OperationsTable.TYPE_OUTGOING);
-			cv.put(DatabaseManager.OperationsTable.DATE, date);
+			OperationsTable.Builder builder = OperationsTable.getBuilder();
+			builder.amount(Double.valueOf(outgoing)).date(date).type(OperationsTable.TYPE_OUTGOING);
 
-			context.getContentResolver().insert(BudgetProvider.CONTENT_URI_OPERATIONS, cv);
+			context.getContentResolver().insert(BudgetProvider.CONTENT_URI_OPERATIONS, builder.build());
 
 			if (!hasBalance) {
 				BalanceUtils.changeCurrentBalance(context, Long.valueOf(outgoing), BalanceUtils.OperationType.DECREASE);
@@ -83,8 +78,6 @@ public class SmsSyncronizer {
 		String value = null;
 
 		for (String prefix : prefixes) {
-			prefix.trim();
-
 			if (data.contains(prefix)) {
 				String[] ss = data.split(prefix);
 				ss = ss[1].split(WHITESPACE);
