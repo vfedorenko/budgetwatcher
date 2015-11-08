@@ -2,7 +2,7 @@
              xmlns:tools="http://schemas.android.com/tools"
              android:layout_width="match_parent"
              android:layout_height="match_parent"
-              android:orientation="vertical"
+             android:orientation="vertical"
              tools:context="by.vfedorenko.budgetwatcher.fragments.MainFragment">
 
     <LinearLayout
@@ -22,9 +22,19 @@
             android:textSize="@dimen/amount_text_size"/>
     </LinearLayout>
 
-    <ListView
-        android:id="@+id/operations_list_view"
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/swipe_container"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"/>
+        android:layout_weight="1" >
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/operations_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"/>
+
+    </android.support.v4.widget.SwipeRefreshLayout>
+
 </LinearLayout>

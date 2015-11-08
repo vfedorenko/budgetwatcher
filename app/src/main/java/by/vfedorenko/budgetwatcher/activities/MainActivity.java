@@ -13,7 +13,6 @@ import android.widget.ListView;
 
 import by.vfedorenko.budgetwatcher.R;
 import by.vfedorenko.budgetwatcher.fragments.MainFragment;
-import by.vfedorenko.budgetwatcher.utils.SmsSyncronizer;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -56,10 +55,7 @@ public class MainActivity extends AppCompatActivity {
 		int id = item.getItemId();
 
 		//noinspection SimplifiableIfStatement
-		if (id == R.id.action_sync_sms) {
-			SmsSyncronizer.syncSms(this.getApplicationContext());
-			return true;
-		} else if (id == R.id.action_sync_network) {
+		if (id == R.id.action_sync_network) {
 			return true;
 		}
 

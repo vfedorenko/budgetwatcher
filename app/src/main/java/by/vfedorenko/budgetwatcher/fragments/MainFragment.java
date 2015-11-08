@@ -2,28 +2,27 @@ package by.vfedorenko.budgetwatcher.fragments;
 
 
 import android.app.Fragment;
-import android.app.LoaderManager;
-import android.content.CursorLoader;
-import android.content.Loader;
-import android.database.Cursor;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CursorAdapter;
-import android.widget.ListView;
 import android.widget.TextView;
+
+import java.util.List;
 
 import by.vfedorenko.budgetwatcher.R;
 import by.vfedorenko.budgetwatcher.adapters.OperationsAdapter;
-import by.vfedorenko.budgetwatcher.content.BudgetProvider;
-import by.vfedorenko.budgetwatcher.content.OperationsTable;
-import by.vfedorenko.budgetwatcher.utils.BalanceUtils;
+import by.vfedorenko.budgetwatcher.presenters.OperationsViewPresenter;
+import by.vfedorenko.budgetwatcher.realm.Operation;
 
-public class MainFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
-	private static final int OPERATIONS_LOADER_ID = 1;
-
-	private OperationsAdapter mAdapter;
+public class MainFragment extends Fragment {
+	public interface OperationsView {
+		void onDataChanged(List<Operation> data);
+		void onBalanceChanged(double balance);
+	}
 
 	public MainFragment() {
 		// Required empty public constructor
@@ -33,52 +32,45 @@ public class MainFragment extends Fragment implements LoaderManager.LoaderCallba
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View v = inflater.inflate(R.layout.fragment_main, container, false);
 
-		long balance = BalanceUtils.getCurrentBalance(getActivity());
+		final TextView amount = (TextView) v.findViewById(R.id.amount_text_view);
+		final RecyclerView operationsListView = (RecyclerView) v.findViewById(R.id.operations_recycler_view);
+		operationsListView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-		TextView amount = (TextView) v.findViewById(R.id.amount_text_view);
-		amount.setText(String.valueOf(balance));
+		OperationsView view = new OperationsView() {
+			@Override
+			public void onDataChanged(List<Operation> data) {
+				OperationsAdapter adapter = new OperationsAdapter(data);
+				operationsListView.setAdapter(adapter);
+			}
 
-		ListView operationsListView = (ListView) v.findViewById(R.id.operations_list_view);
+			@Override
+			public void onBalanceChanged(double balance) {
+				String format = "%.2f";
+				if (balance % 1 == 0) {
+					format = "%.0f";
+				}
 
-		mAdapter = new OperationsAdapter(getActivity(), null, CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
-		operationsListView.setAdapter(mAdapter);
+				amount.setText(String.format(format, balance));
+			}
+		};
+
+		final OperationsViewPresenter presenter = new OperationsViewPresenter(view);
+		presenter.init(getActivity());
+
+		final SwipeRefreshLayout swipeContainer = (SwipeRefreshLayout) v.findViewById(R.id.swipe_container);
+		swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+			@Override
+			public void onRefresh() {
+				presenter.syncSms(getActivity());
+				swipeContainer.setRefreshing(false);
+			}
+		});
+
+		swipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright,
+				android.R.color.holo_green_light,
+				android.R.color.holo_orange_light,
+				android.R.color.holo_red_light);
 
 		return v;
-	}
-
-	@Override
-	public void onActivityCreated(Bundle savedInstanceState) {
-		super.onActivityCreated(savedInstanceState);
-		getLoaderManager().initLoader(OPERATIONS_LOADER_ID, null, this);
-	}
-
-	@Override
-	public void onResume() {
-		super.onResume();
-		getLoaderManager().getLoader(OPERATIONS_LOADER_ID).forceLoad();
-	}
-
-	@Override
-	public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-		if (id == OPERATIONS_LOADER_ID) {
-			return new CursorLoader(getActivity(), BudgetProvider.CONTENT_URI_OPERATIONS, null, null, null,
-					OperationsTable.DATE + " DESC");
-		} else {
-			return null;
-		}
-	}
-
-	@Override
-	public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-		if (loader.getId() == OPERATIONS_LOADER_ID) {
-			mAdapter.changeCursor(data);
-		}
-	}
-
-	@Override
-	public void onLoaderReset(Loader<Cursor> loader) {
-		if (loader.getId() == OPERATIONS_LOADER_ID) {
-			mAdapter.changeCursor(null);
-		}
 	}
 }

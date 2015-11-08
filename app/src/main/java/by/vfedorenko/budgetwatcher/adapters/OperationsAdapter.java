@@ -1,65 +1,68 @@
 package by.vfedorenko.budgetwatcher.adapters;
 
-import android.content.Context;
-import android.database.Cursor;
+import android.databinding.DataBindingUtil;
+import android.databinding.ViewDataBinding;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CursorAdapter;
-import android.widget.TextView;
 
+import java.util.List;
+
+import by.vfedorenko.budgetwatcher.BR;
 import by.vfedorenko.budgetwatcher.R;
-import by.vfedorenko.budgetwatcher.content.Db;
-import by.vfedorenko.budgetwatcher.content.OperationsTable;
-import by.vfedorenko.budgetwatcher.utils.TimeUtils;
+import by.vfedorenko.budgetwatcher.databinding.ItemOperationBinding;
+import by.vfedorenko.budgetwatcher.realm.Operation;
+import by.vfedorenko.budgetwatcher.viewmodels.OperationViewModel;
 
-public class OperationsAdapter extends CursorAdapter {
-	private class ViewHolder {
-		protected View icon;
-		protected TextView amount;
-		protected TextView date;
+public class OperationsAdapter extends RecyclerView.Adapter<OperationsAdapter.BindingHolder> {
+	public static class BindingHolder extends RecyclerView.ViewHolder {
+		private ItemOperationBinding binding;
+
+		public BindingHolder(View rowView) {
+			super(rowView);
+			binding = DataBindingUtil.bind(rowView);
+		}
+
+		public ViewDataBinding getBinding() {
+			return binding;
+		}
 	}
 
-	private LayoutInflater inflater_;
+	private List<Operation> mOperations;
 
-	public OperationsAdapter(Context context, Cursor c, int flags) {
-		super(context, c, flags);
-		inflater_ = LayoutInflater.from(context);
+	public OperationsAdapter(List<Operation> data) {
+		mOperations = data;
 	}
 
 	@Override
-	public View newView(Context context, Cursor cursor, ViewGroup parent) {
-		View v = inflater_.inflate(R.layout.item_budget, null);
-
-		ViewHolder holder = new ViewHolder();
-		holder.icon = v.findViewById(R.id.icon);
-		holder.amount = (TextView) v.findViewById(R.id.amount);
-		holder.date = (TextView) v.findViewById(R.id.date);
-
-		v.setTag(holder);
-		return v;
+	public BindingHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+		View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_operation, parent, false);
+		BindingHolder holder = new BindingHolder(v);
+		return holder;
 	}
 
 	@Override
-	public void bindView(View view, Context context, Cursor cursor) {
-		ViewHolder holder = (ViewHolder) view.getTag();
+	public void onBindViewHolder(BindingHolder holder, int position) {
+		Operation operation = mOperations.get(position);
+		holder.getBinding().setVariable(BR.operation, new OperationViewModel(operation));
+		holder.getBinding().executePendingBindings();
+	}
 
-		int type = Db.getInt(cursor, OperationsTable.TYPE);
+	@Override
+	public int getItemCount() {
+		return mOperations.size();
+	}
 
-		double amount = Db.getDouble(cursor, OperationsTable.AMOUNT);
-		long date = Db.getLong(cursor, OperationsTable.DATE);
+	// Clean all elements of the recycler
+	public void clear() {
+		mOperations.clear();
+		notifyDataSetChanged();
+	}
 
-		if (type == OperationsTable.TYPE_INCOMING) {
-			holder.icon.setBackgroundResource(R.drawable.operation_icon_positive);
-		} else if (type == OperationsTable.TYPE_OUTGOING) {
-			holder.icon.setBackgroundResource(R.drawable.operation_icon_negative);
-		}
-
-		String format = "%.2f";
-		if (amount % 1 == 0) {
-			format = "%.0f";
-		}
-		holder.amount.setText(String.format(format, amount));
-		holder.date.setText(TimeUtils.formatOperationTime(date));
+	// Add a list of items
+	public void addAll(List<Operation> list) {
+		mOperations.addAll(list);
+		notifyDataSetChanged();
 	}
 }

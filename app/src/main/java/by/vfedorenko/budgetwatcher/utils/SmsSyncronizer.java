@@ -3,20 +3,30 @@ package by.vfedorenko.budgetwatcher.utils;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.provider.Telephony;
 
-import by.vfedorenko.budgetwatcher.content.BudgetProvider;
-import by.vfedorenko.budgetwatcher.content.OperationsTable;
+import by.vfedorenko.budgetwatcher.realm.Operation;
+import by.vfedorenko.budgetwatcher.viewmodels.OperationViewModel;
+import io.realm.Realm;
 
 public class SmsSyncronizer {
+	public interface SmsSyncCallback {
+		void onFinished();
+	}
+
 	private static final String SEPARATOR = ",";
 	private static final String WHITESPACE = " ";
 
-	public static void syncSms(final Context context) {
-		new Thread(new Runnable() {
+	public static void syncSms(final Context context, final SmsSyncCallback callback) {
+		new AsyncTask<Void, Void, Void>() {
+
 			@Override
-			public void run() {
-				context.getContentResolver().delete(BudgetProvider.CONTENT_URI_OPERATIONS, null, null);
+			protected Void doInBackground(Void... params) {
+				Realm realm = Realm.getDefaultInstance();
+				realm.beginTransaction();
+				realm.clear(Operation.class);
+				realm.commitTransaction();
 
 				Uri uri = Uri.parse("content://sms/inbox");
 				String[] projection = new String[] {Telephony.Sms.Inbox.BODY, Telephony.Sms.Inbox.DATE};
@@ -35,41 +45,57 @@ public class SmsSyncronizer {
 
 					cursor.close();
 				}
+
+				return null;
 			}
-		}).start();
+
+			@Override
+			protected void onPostExecute(Void aVoid) {
+				callback.onFinished();
+			}
+		}.execute();
 	}
 
 	public static void parseSmsToDatabase(Context context, String body, long date) {
+		Realm realm = Realm.getDefaultInstance();
 		boolean hasBalance = false;
 
 		String balance = parseValue(body, SettingsManager.getBalancePrefix(context).split(SEPARATOR));
 		if (balance != null) {
 			hasBalance = true;
-			BalanceUtils.saveCurrentBalance(context, Long.valueOf(balance.trim()));
+			BalanceUtils.saveCurrentBalance(context, Float.valueOf(balance.trim()));
 		}
 
 		String incoming = parseValue(body, SettingsManager.getIncomingPrefixes(context).split(SEPARATOR));
 		if (incoming != null) {
-			OperationsTable.Builder builder = OperationsTable.getBuilder();
-			builder.amount(Long.valueOf(incoming)).date(date).type(OperationsTable.TYPE_INCOMING);
+			realm.beginTransaction();
 
-			context.getContentResolver().insert(BudgetProvider.CONTENT_URI_OPERATIONS, builder.build());
+			Operation operation = realm.createObject(Operation.class);
+			operation.setAmount(Float.valueOf(incoming));
+			operation.setDate(date);
+			operation.setType(OperationViewModel.TYPE_INCOMING);
+
+			realm.commitTransaction();
 
 			if (!hasBalance) {
-				BalanceUtils.changeCurrentBalance(context, Long.valueOf(incoming), BalanceUtils.OperationType.INCREASE);
+				BalanceUtils.changeCurrentBalance(context, Float.valueOf(incoming), BalanceUtils.OperationType.INCREASE);
 			}
 			return;
 		}
 
 		String outgoing = parseValue(body, SettingsManager.getOutgoingPrefixes(context).split(SEPARATOR));
 		if (outgoing != null) {
-			OperationsTable.Builder builder = OperationsTable.getBuilder();
-			builder.amount(Double.valueOf(outgoing)).date(date).type(OperationsTable.TYPE_OUTGOING);
+			realm.beginTransaction();
 
-			context.getContentResolver().insert(BudgetProvider.CONTENT_URI_OPERATIONS, builder.build());
+			Operation operation = realm.createObject(Operation.class);
+			operation.setAmount(Float.valueOf(outgoing));
+			operation.setDate(date);
+			operation.setType(OperationViewModel.TYPE_OUTGOING);
+
+			realm.commitTransaction();
 
 			if (!hasBalance) {
-				BalanceUtils.changeCurrentBalance(context, Long.valueOf(outgoing), BalanceUtils.OperationType.DECREASE);
+				BalanceUtils.changeCurrentBalance(context, Float.valueOf(outgoing), BalanceUtils.OperationType.DECREASE);
 			}
 		}
 	}
