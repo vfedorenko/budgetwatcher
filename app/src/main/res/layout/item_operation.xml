@@ -7,7 +7,7 @@
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content">
 
         <View
             android:id="@+id/icon"
@@ -17,13 +17,27 @@
             android:layout_gravity="center_vertical"
             android:background="@{operation.typeColor}"/>
 
-        <TextView
-            android:id="@+id/amount"
+        <LinearLayout
             android:layout_width="0dp"
             android:layout_weight="1"
-            android:layout_gravity="center_vertical"
             android:layout_height="wrap_content"
-            android:text="@{operation.amount}"/>
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:text="@{operation.amount}"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:hint="@string/title_activity_add_tags"
+                android:onClick="@{operation.onAddTagClick}"
+                android:text="@{operation.tags}"/>
+
+        </LinearLayout>
 
         <TextView
             android:id="@+id/date"

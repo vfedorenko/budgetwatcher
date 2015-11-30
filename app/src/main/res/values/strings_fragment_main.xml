@@ -3,4 +3,5 @@
 
     <!-- Strings related to MainFragment -->
     <string name="your_current_amount">Your current amount</string>
+    <string name="add_tag">Add Tag</string>
 </resources>

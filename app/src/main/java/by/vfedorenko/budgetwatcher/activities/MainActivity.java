@@ -3,13 +3,13 @@ package by.vfedorenko.budgetwatcher.activities;
 import android.app.FragmentManager;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ListView;
 
 import by.vfedorenko.budgetwatcher.R;
 import by.vfedorenko.budgetwatcher.fragments.MainFragment;
@@ -17,20 +17,28 @@ import by.vfedorenko.budgetwatcher.fragments.MainFragment;
 public class MainActivity extends AppCompatActivity {
 
 	private DrawerLayout mDrawerLayout;
-	private ListView mDrawerList;
+	private NavigationView mNavigationView;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
-		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-		mDrawerList = (ListView) findViewById(R.id.left_drawer);
+		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+		setSupportActionBar(toolbar);
 
-		mDrawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+		final ActionBar ab = getSupportActionBar();
+		//ab.setHomeAsUpIndicator(R.drawable.ic_menu);
+		ab.setDisplayHomeAsUpEnabled(true);
+
+		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+		mNavigationView = (NavigationView) findViewById(R.id.navigation_view);
+
+		mNavigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
 			@Override
-			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				selectItem(position);
+			public boolean onNavigationItemSelected(MenuItem item) {
+				selectItem(item.getItemId());
+				return true;
 			}
 		});
 
@@ -63,18 +71,18 @@ public class MainActivity extends AppCompatActivity {
 	}
 
 	/** Swaps fragments in the main content view */
-	private void selectItem(int position) {
-		switch (position) {
-			case 0:
+	private void selectItem(int id) {
+		switch (id) {
+			case R.id.drawer_home:
 				// Insert the fragment by replacing any existing fragment
 				FragmentManager fragmentManager = getFragmentManager();
 				fragmentManager.beginTransaction()
 						.replace(R.id.content_frame, new MainFragment())
 						.commit();
 				break;
-			case 1:
+			case R.id.drawer_statistic:
 				break;
-			case 2:
+			case R.id.drawer_settings:
 				startActivity(new Intent(this, SettingsActivity.class));
 				break;
 		}
@@ -92,9 +100,9 @@ public class MainActivity extends AppCompatActivity {
 //				.commit();
 
 		// Highlight the selected item, update the title, and close the drawer
-		mDrawerList.setItemChecked(position, true);
+		//mNavigationView.setItemChecked(position, true);
 		//setTitle(mPlanetTitles[position]);
-		mDrawerLayout.closeDrawer(mDrawerList);
+		mDrawerLayout.closeDrawer(mNavigationView);
 	}
 
 	@Override

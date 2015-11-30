@@ -1,8 +1,12 @@
 package by.vfedorenko.budgetwatcher.viewmodels;
 
+import android.content.Context;
 import android.graphics.Color;
+import android.view.View;
 
+import by.vfedorenko.budgetwatcher.activities.AddTagsActivity;
 import by.vfedorenko.budgetwatcher.realm.Operation;
+import by.vfedorenko.budgetwatcher.realm.OperationTag;
 import by.vfedorenko.budgetwatcher.utils.TimeUtils;
 
 public class OperationViewModel {
@@ -33,5 +37,28 @@ public class OperationViewModel {
 
 	public String getDateString() {
 		return TimeUtils.formatOperationTime(mOperation.getDate());
+	}
+
+	public String getTags() {
+		StringBuilder tags = new StringBuilder();
+
+		for (OperationTag tag : mOperation.getTags()) {
+			if (tags.length() > 0) {
+				tags.append("; ");
+			}
+
+			if (tag.getTag() != null) {
+				tags.append(tag.getTag().getName());
+			} else {
+				tags.append("null");
+			}
+		}
+
+		return tags.toString();
+	}
+
+	public void onAddTagClick(View v) {
+		Context c = v.getContext();
+		c.startActivity(AddTagsActivity.createIntent(c, mOperation.getDate()));
 	}
 }
