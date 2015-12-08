@@ -1,8 +1,8 @@
 <resources>
     <string name="app_name">BudgetWatcher</string>
 
-    <string name="action_sync_sms">Sync with local SMS database</string>
-    <string name="action_sync_network">Sync with Google drive base</string>
+    <string name="action_save_to_drive">Save to Google drive</string>
+    <string name="action_load_from_drive">Load from Google drive</string>
 
     <string name="title_activity_add_tags">Add Tags</string>
 

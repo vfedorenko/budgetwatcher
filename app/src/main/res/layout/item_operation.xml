@@ -7,10 +7,10 @@
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:onClick="@{operation.onOperationClick}">
 
         <View
-            android:id="@+id/icon"
             android:layout_width="@dimen/operation_icon_size"
             android:layout_height="@dimen/operation_icon_size"
             android:layout_margin="@dimen/small_margin"
@@ -34,13 +34,11 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:hint="@string/title_activity_add_tags"
-                android:onClick="@{operation.onAddTagClick}"
                 android:text="@{operation.tags}"/>
 
         </LinearLayout>
 
         <TextView
-            android:id="@+id/date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="right"

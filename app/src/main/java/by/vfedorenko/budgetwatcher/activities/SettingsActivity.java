@@ -11,9 +11,6 @@ import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.support.v7.widget.Toolbar;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import java.util.List;
@@ -134,13 +131,6 @@ public class SettingsActivity extends PreferenceActivity {
 			bindPreferenceSummaryToValue(findPreference(getString(R.string.key_incoming_prefix)));
 			bindPreferenceSummaryToValue(findPreference(getString(R.string.key_outgoing_prefix)));
 			bindPreferenceSummaryToValue(findPreference(getString(R.string.key_balance_prefix)));
-		}
-
-		@Override
-		public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-			View v = inflater.inflate(R.layout.fragment_main, container, false);
-
-			return super.onCreateView(inflater, container, savedInstanceState);
 		}
 	}
 }

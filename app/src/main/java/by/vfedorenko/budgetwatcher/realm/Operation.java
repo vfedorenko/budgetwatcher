@@ -2,16 +2,18 @@ package by.vfedorenko.budgetwatcher.realm;
 
 import io.realm.RealmList;
 import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
 
 public class Operation extends RealmObject {
 	public static final String FIELD_AMOUNT = "amount";
 	public static final String FIELD_DATE = "date";
 	public static final String FIELD_TYPE = "type";
+	public static final String FIELD_TAGS = "tags";
 
 	private float amount;
+	@PrimaryKey
 	private long date;
 	private int type;
-
 	private RealmList<OperationTag> tags;
 
 	public float getAmount() {

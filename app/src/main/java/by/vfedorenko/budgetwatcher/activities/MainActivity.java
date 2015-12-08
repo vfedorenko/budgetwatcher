@@ -12,7 +12,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import by.vfedorenko.budgetwatcher.R;
-import by.vfedorenko.budgetwatcher.fragments.MainFragment;
+import by.vfedorenko.budgetwatcher.fragments.OperationListFragment;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -29,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
 
 		final ActionBar ab = getSupportActionBar();
 		//ab.setHomeAsUpIndicator(R.drawable.ic_menu);
-		ab.setDisplayHomeAsUpEnabled(true);
+		ab.setDisplayHomeAsUpEnabled(false);
 
 		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 		mNavigationView = (NavigationView) findViewById(R.id.navigation_view);
@@ -44,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
 
 		FragmentManager fragmentManager = getFragmentManager();
 		fragmentManager.beginTransaction()
-				.replace(R.id.content_frame, new MainFragment())
+				.replace(R.id.content_frame, new OperationListFragment())
 				.commit();
 	}
 
@@ -62,9 +62,11 @@ public class MainActivity extends AppCompatActivity {
 		// as you specify a parent activity in AndroidManifest.xml.
 		int id = item.getItemId();
 
-		//noinspection SimplifiableIfStatement
-		if (id == R.id.action_sync_network) {
+		if (id == R.id.action_save) {
+			startActivity(DriveActivity.buildIntent(this, DriveActivity.LAUNCH_TYPE_EXPORT));
 			return true;
+		} else if (id == R.id.action_load) {
+			startActivity(DriveActivity.buildIntent(this, DriveActivity.LAUNCH_TYPE_IMPORT));
 		}
 
 		return super.onOptionsItemSelected(item);
@@ -77,7 +79,7 @@ public class MainActivity extends AppCompatActivity {
 				// Insert the fragment by replacing any existing fragment
 				FragmentManager fragmentManager = getFragmentManager();
 				fragmentManager.beginTransaction()
-						.replace(R.id.content_frame, new MainFragment())
+						.replace(R.id.content_frame, new OperationListFragment())
 						.commit();
 				break;
 			case R.id.drawer_statistic:

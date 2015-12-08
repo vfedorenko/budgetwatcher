@@ -11,6 +11,10 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme.NoActionBar">
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version"/>
+
         <activity
             android:name=".activities.MainActivity"
             android:label="@string/app_name">
@@ -28,11 +32,18 @@
             android:name=".activities.AddTagsActivity"
             android:label="@string/title_activity_add_tags">
         </activity>
+        <activity
+            android:name=".activities.OperationDetailActivity"
+            android:label="@string/title_operation_detail"/>
 
         <receiver android:name=".utils.SmsReceiver">
-            <intent-filter>
+            <intent-filter android:priority="999">
                 <action android:name="android.provider.Telephony.SMS_RECEIVED"/>
             </intent-filter>
         </receiver>
+
+        <activity android:name=".activities.DriveActivity">
+        </activity>
     </application>
+
 </manifest>

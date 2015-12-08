@@ -3,6 +3,9 @@ package by.vfedorenko.budgetwatcher.realm;
 import io.realm.RealmObject;
 
 public class OperationTag extends RealmObject {
+	public static final String FIELD_PERCENT = "percent";
+	public static final String FIELD_TAG = "tag";
+
 	private float percent;
 	private Tag tag;
 
