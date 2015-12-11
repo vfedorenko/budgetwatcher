@@ -20,6 +20,7 @@ import by.vfedorenko.budgetwatcher.activities.OperationDetailActivity;
 import by.vfedorenko.budgetwatcher.databinding.ItemOperationBinding;
 import by.vfedorenko.budgetwatcher.presenters.OperationsViewPresenter;
 import by.vfedorenko.budgetwatcher.realm.Operation;
+import by.vfedorenko.budgetwatcher.utils.BalanceUtils;
 import by.vfedorenko.budgetwatcher.viewmodels.OperationViewModel;
 
 /**
@@ -59,12 +60,7 @@ public class OperationListFragment extends Fragment {
                 OperationsAdapter adapter = new OperationsAdapter(data);
                 operationsListView.setAdapter(adapter);
 
-                String format = "%.2f";
-                if (balance % 1 == 0) {
-                    format = "%.0f";
-                }
-
-                amount.setText(String.format(format, balance));
+                amount.setText(BalanceUtils.formatMoney(balance));
             }
         };
 
@@ -146,18 +142,6 @@ public class OperationListFragment extends Fragment {
         @Override
         public int getItemCount() {
             return mOperations.size();
-        }
-
-        // Clean all elements of the recycler
-        public void clear() {
-            mOperations.clear();
-            notifyDataSetChanged();
-        }
-
-        // Add a list of items
-        public void addAll(List<Operation> list) {
-            mOperations.addAll(list);
-            notifyDataSetChanged();
         }
     }
 }

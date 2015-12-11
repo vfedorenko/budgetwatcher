@@ -2,7 +2,6 @@ package by.vfedorenko.budgetwatcher.viewmodels;
 
 import android.databinding.BaseObservable;
 import android.text.Editable;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 
@@ -43,8 +42,6 @@ public class AddTagsViewModel extends BaseObservable {
 		Realm realm = Realm.getDefaultInstance();
 
 		if (realm.where(Operation.class).equalTo(Operation.FIELD_DATE, mOperationDate).equalTo("tags.tag.name", tagName).findAll().size() == 0) {
-			Log.e("111", "no such tags for operation");
-
 			Operation operation = realm.where(Operation.class).equalTo(Operation.FIELD_DATE, mOperationDate).findFirst();
 			Tag tag = realm.where(Tag.class).equalTo(Tag.FIELD_NAME, tagName).findFirst();
 

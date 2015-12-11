@@ -37,4 +37,12 @@ public class BalanceUtils {
 		editor.putFloat(KEY_BALANCE, balance);
 		editor.apply();
 	}
+
+	public static String formatMoney(double amount) {
+		String format = "%.2f";
+		if (amount % 1 == 0) {
+			format = "%.0f";
+		}
+		return String.format(format, amount);
+	}
 }

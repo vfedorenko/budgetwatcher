@@ -13,4 +13,5 @@
     <string name="delete">Delete</string>
     <string name="title_operation_list">Operations</string>
     <string name="title_operation_detail">Operation Detail</string>
+    <string name="title_activity_test">Test</string>
 </resources>

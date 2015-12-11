@@ -11,7 +11,8 @@ public class BudgetWatcherApplication extends Application {
 	public void onCreate() {
 		super.onCreate();
 
-		RealmConfiguration config = new RealmConfiguration.Builder(this).build();
+		RealmConfiguration config = new RealmConfiguration.Builder(this)
+				.deleteRealmIfMigrationNeeded().build();
 		Realm.setDefaultConfiguration(config);
 	}
 }

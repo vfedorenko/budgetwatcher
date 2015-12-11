@@ -4,7 +4,7 @@
         <variable name="operation" type="by.vfedorenko.budgetwatcher.viewmodels.OperationViewModel"/>
     </data>
 
-    <LinearLayout
+    <android.support.design.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical" >
@@ -32,10 +32,18 @@
                 android:textSize="@dimen/your_current_amount_text_size"/>
         </LinearLayout>
 
-        <ListView
-            android:id="@+id/tags_list_view"
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/tags_recycler_view"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"/>
-    </LinearLayout>
+
+        <android.support.design.widget.FloatingActionButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:layout_margin="@dimen/fab_margin"
+            android:onClick="@{operation.onAddTagClick}"
+            android:src="@android:drawable/ic_delete"/>
+    </android.support.design.widget.CoordinatorLayout>
 </layout>

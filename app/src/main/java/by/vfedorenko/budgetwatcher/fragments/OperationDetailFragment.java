@@ -2,15 +2,24 @@ package by.vfedorenko.budgetwatcher.fragments;
 
 import android.app.Fragment;
 import android.databinding.DataBindingUtil;
+import android.databinding.ViewDataBinding;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.List;
+
+import by.vfedorenko.budgetwatcher.BR;
 import by.vfedorenko.budgetwatcher.R;
 import by.vfedorenko.budgetwatcher.activities.OperationDetailActivity;
+import by.vfedorenko.budgetwatcher.databinding.ItemOperationTagBinding;
 import by.vfedorenko.budgetwatcher.databinding.OperationDetailBinding;
 import by.vfedorenko.budgetwatcher.realm.Operation;
+import by.vfedorenko.budgetwatcher.realm.OperationTag;
+import by.vfedorenko.budgetwatcher.viewmodels.OperationTagViewModel;
 import by.vfedorenko.budgetwatcher.viewmodels.OperationViewModel;
 import io.realm.Realm;
 
@@ -61,8 +70,49 @@ public class OperationDetailFragment extends Fragment {
         OperationViewModel viewModel = new OperationViewModel(mOperation, null);
         binding.setOperation(viewModel);
 
-        //binding.tagsListView
+        binding.tagsRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        binding.tagsRecyclerView.setAdapter(new TagsAdapter(mOperation.getTags()));
 
         return binding.getRoot();
+    }
+
+    public class TagsAdapter extends RecyclerView.Adapter<TagsAdapter.BindingHolder> {
+        public class BindingHolder extends RecyclerView.ViewHolder {
+            private ItemOperationTagBinding binding;
+
+            public BindingHolder(View rowView) {
+                super(rowView);
+                binding = DataBindingUtil.bind(rowView);
+            }
+
+            public ViewDataBinding getBinding() {
+                return binding;
+            }
+        }
+
+        private List<OperationTag> mOperations;
+
+        public TagsAdapter(List<OperationTag> data) {
+            mOperations = data;
+        }
+
+        @Override
+        public BindingHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_operation_tag, parent, false);
+            return new BindingHolder(v);
+        }
+
+        @Override
+        public void onBindViewHolder(BindingHolder holder, int position) {
+            OperationTag operation = mOperations.get(position);
+
+            holder.getBinding().setVariable(BR.operation, new OperationTagViewModel(operation));
+            holder.getBinding().executePendingBindings();
+        }
+
+        @Override
+        public int getItemCount() {
+            return mOperations.size();
+        }
     }
 }
