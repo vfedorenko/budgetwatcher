@@ -10,7 +10,7 @@
     <string name="pref_description_enable_parsing">Recommended for auto filling statistics</string>
 
     <string name="pref_title_phone_number">Phone number for parsing</string>
-    <string name="pref_default_phone_number">1209</string>
+    <string name="pref_default_phone_number">BPSSBERBANK</string>
 
     <string name="pref_title_card_number_prefix">Prefix before card number</string>
     <string name="pref_default_card_number_prefix">#</string>
